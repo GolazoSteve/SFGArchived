@@ -71,7 +71,7 @@ def mark_as_posted(gamepk):
 
 
 def send_telegram_message(gamepk, away, home):
-    web_url = f"https://www.mlb.com/tv/g{gamepk}"
+    web_url = f"https://golazosteve.github.io/SFGArchived/watch/?g={gamepk}"
     message = f"📺 {away} @ {home}"
     payload = {
         "chat_id": TELEGRAM_CHAT_ID,

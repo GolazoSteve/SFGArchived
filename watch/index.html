@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Opening MLB app…</title>
+  <style>
+    body { font-family: sans-serif; display: flex; align-items: center;
+           justify-content: center; min-height: 100vh; margin: 0;
+           background: #002D62; color: #fff; text-align: center; }
+    a { color: #FDB827; }
+  </style>
+</head>
+<body>
+  <div>
+    <p>Opening MLB app…</p>
+    <p><a id="fallback" href="#">Tap here if nothing happens</a></p>
+  </div>
+  <script>
+    var gamePk = new URLSearchParams(window.location.search).get('g');
+    if (!gamePk) { window.location = 'https://www.mlb.com'; }
+
+    var webUrl = 'https://www.mlb.com/tv/g' + gamePk;
+    var fallbackEncoded = encodeURIComponent(webUrl);
+
+    // Android: intent URL tells the OS to open this URL with the MLB app directly,
+    // bypassing the browser entirely. Falls back to the web URL if app isn't installed.
+    var intentUrl = 'intent://www.mlb.com/tv/g' + gamePk
+      + '#Intent;scheme=https'
+      + ';package=com.bamnetworks.mobile.android.gameday.atbat'
+      + ';S.browser_fallback_url=' + fallbackEncoded
+      + ';end';
+
+    document.getElementById('fallback').href = webUrl;
+
+    // Redirect immediately — Android WebView passes intent:// to the OS
+    window.location = intentUrl;
+
+    // If still here after 2s (e.g. iOS or desktop), go to web URL
+    setTimeout(function () { window.location = webUrl; }, 2000);
+  </script>
+</body>
+</html>
