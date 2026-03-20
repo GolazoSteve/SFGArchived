@@ -7,17 +7,19 @@
   <style>
     body { font-family: sans-serif; display: flex; align-items: center;
            justify-content: center; min-height: 100vh; margin: 0;
-           background: #002D62; color: #fff; text-align: center; padding: 1rem; }
+           background: #000000; color: #fff; text-align: center; padding: 1rem; }
     .btn { display: inline-block; margin: 0.5rem; padding: 0.9rem 2rem;
            border-radius: 8px; text-decoration: none; font-size: 1.1rem; font-weight: bold; }
-    .primary { background: #FDB827; color: #002D62; }
-    .secondary { background: transparent; color: #fff; border: 2px solid #fff; font-size: 0.95rem; }
+    .primary { background: #FD5A1E; color: #fff; }
+    .secondary { background: transparent; color: #FD5A1E; border: 2px solid #FD5A1E; font-size: 0.95rem; }
+    .credit { margin-top: 2.5rem; font-size: 0.8rem; color: #888; }
   </style>
 </head>
 <body>
   <div>
     <p style="font-size:1.2rem;margin-bottom:1.5rem;">⚾ Tap to watch the archived game</p>
     <div id="links"></div>
+    <p class="credit">Made possible by Steve Klein, an absolutely tremendous human being.</p>
   </div>
   <script>
     var params  = new URLSearchParams(window.location.search);
