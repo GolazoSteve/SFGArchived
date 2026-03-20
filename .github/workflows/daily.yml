@@ -1,0 +1,41 @@
+name: Daily Archive Post
+
+on:
+  schedule:
+    - cron: '0 10 * * *'   # 10:00 UTC = 3:00 AM PT — safely after any evening game
+  workflow_dispatch:
+    inputs:
+      force_post:
+        description: 'Force post (skip duplicate check)'
+        required: false
+        default: 'false'
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write       # needed to commit state file back
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - run: pip install -r requirements.txt
+
+      - name: Run bot
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          FORCE_POST: ${{ github.event.inputs.force_post || 'false' }}
+        run: python run_bot.py
+
+      - name: Commit state file
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add posted_archived.txt
+          git diff --staged --quiet || git commit -m "chore: update posted state"
+          git push
