@@ -12,19 +12,25 @@
            border-radius: 8px; text-decoration: none; font-size: 1.1rem; font-weight: bold; }
     .primary { background: #FD5A1E; color: #fff; }
     .secondary { background: transparent; color: #FD5A1E; border: 2px solid #FD5A1E; font-size: 0.95rem; }
-    .credit { margin-top: 2.5rem; font-size: 0.8rem; color: #888; }
+    .tagline { font-size: 1.2rem; margin-bottom: 1.5rem; min-height: 1.6rem; }
+    .footer { margin-top: 2.5rem; font-size: 0.75rem; color: #555; }
+    .thanks { display: inline-block; margin-top: 0.4rem; color: #FD5A1E;
+              font-size: 0.75rem; text-decoration: none; border-bottom: 1px solid #FD5A1E; }
   </style>
 </head>
 <body>
   <div>
-    <p style="font-size:1.2rem;margin-bottom:1.5rem;">⚾ Tap to watch the archived game</p>
+    <p class="tagline" id="tagline">⚾</p>
     <div id="links"></div>
-    <p class="credit">Made possible by Steve Klein, an absolutely tremendous human being.</p>
+    <div class="footer">
+      Made possible by Steve Klein.<br>
+      <a class="thanks" href="https://paypal.me/sdklein" target="_blank">Say thanks</a>
+    </div>
   </div>
   <script>
     var params  = new URLSearchParams(window.location.search);
     var gamePk  = params.get('g');
-    var date    = params.get('d') || '';   // YYYYMMDD, optional
+    var date    = params.get('d') || '';
     if (!gamePk) { window.location = 'https://www.mlb.com'; }
 
     var deepLink = 'mlbatbat://mlbtv?gamepk=' + gamePk + (date ? '&date=' + date : '');
@@ -33,6 +39,17 @@
     document.getElementById('links').innerHTML =
       '<a class="btn primary" href="' + deepLink + '">Open in MLB App</a><br>' +
       '<a class="btn secondary" href="' + webUrl + '">Open in Browser</a>';
+
+    fetch('./copy.json')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var lines = data.lines;
+        var line = lines[Math.floor(Math.random() * lines.length)];
+        document.getElementById('tagline').textContent = line;
+      })
+      .catch(function() {
+        document.getElementById('tagline').textContent = '⚾ Tap to watch the archived game';
+      });
   </script>
 </body>
 </html>
