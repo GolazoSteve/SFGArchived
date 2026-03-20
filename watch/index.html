@@ -20,20 +20,16 @@
     <div id="links"></div>
   </div>
   <script>
-    var gamePk = new URLSearchParams(window.location.search).get('g');
+    var params  = new URLSearchParams(window.location.search);
+    var gamePk  = params.get('g');
+    var date    = params.get('d') || '';   // YYYYMMDD, optional
     if (!gamePk) { window.location = 'https://www.mlb.com'; }
 
-    var webUrl = 'https://www.mlb.com/tv/g' + gamePk;
-    var fallbackEncoded = encodeURIComponent(webUrl);
-    var intentUrl = 'intent://www.mlb.com/tv/g' + gamePk
-      + '#Intent;scheme=https'
-      + ';package=com.bamnetworks.mobile.android.gameday.atbat'
-      + ';S.browser_fallback_url=' + fallbackEncoded
-      + ';end';
+    var deepLink = 'mlbatbat://mlbtv?gamepk=' + gamePk + (date ? '&date=' + date : '');
+    var webUrl   = 'https://www.mlb.com/tv/g' + gamePk;
 
-    var links = document.getElementById('links');
-    links.innerHTML =
-      '<a class="btn primary" href="' + intentUrl + '">Open in MLB App</a><br>' +
+    document.getElementById('links').innerHTML =
+      '<a class="btn primary" href="' + deepLink + '">Open in MLB App</a><br>' +
       '<a class="btn secondary" href="' + webUrl + '">Open in Browser</a>';
   </script>
 </body>

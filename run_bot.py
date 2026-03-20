@@ -53,9 +53,10 @@ def get_recent_gamepks(team_id=137):
                 game_date = game["gameDate"]
                 away = game["teams"]["away"]["team"]["name"]
                 home = game["teams"]["home"]["team"]["name"]
-                games.append((parse(game_date), game_pk, away, home))
+                official_date = date["date"].replace("-", "")
+                games.append((parse(game_date), game_pk, away, home, official_date))
     games.sort(reverse=True)
-    return [(pk, away, home) for _, pk, away, home in games]
+    return [(pk, away, home, d) for _, pk, away, home, d in games]
 
 
 def already_posted(gamepk):
@@ -70,8 +71,8 @@ def mark_as_posted(gamepk):
         f.write(f"{gamepk}\n")
 
 
-def send_telegram_message(gamepk, away, home):
-    web_url = f"https://golazosteve.github.io/SFGArchived/watch/?g={gamepk}"
+def send_telegram_message(gamepk, away, home, date=""):
+    web_url = f"https://golazosteve.github.io/SFGArchived/watch/?g={gamepk}&d={date}"
     message = f"📺 {away} @ {home}"
     payload = {
         "chat_id": TELEGRAM_CHAT_ID,
@@ -104,13 +105,13 @@ def main():
     games = get_recent_gamepks(team_id=TEAM_ID)
     print(f"🧾 Found {len(games)} recent final games")
 
-    for gamepk, away, home in games:
+    for gamepk, away, home, date in games:
         print(f"🔍 Checking gamePk: {gamepk} ({away} @ {home})")
         if not FORCE_POST and already_posted(gamepk):
             print("⏩ Already posted")
             continue
 
-        if send_telegram_message(gamepk, away, home):
+        if send_telegram_message(gamepk, away, home, date):
             mark_as_posted(gamepk)
             print(f"✅ Posted archive link for {gamepk}")
         else:
