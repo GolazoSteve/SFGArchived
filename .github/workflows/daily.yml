@@ -2,7 +2,9 @@ name: Daily Archive Post
 
 on:
   schedule:
-    - cron: '0 10 * * *'   # 10:00 UTC = 3:00 AM PT — safely after any evening game
+    - cron: '30,40,50 7 * * *'       # 7:30, 7:40, 7:50 AM UTC
+    - cron: '0,10,20,30,40,50 8 * * *' # Every 10 mins 8:00-8:50 AM UTC
+    - cron: '0 9 * * *'               # 9:00 AM UTC
   workflow_dispatch:
     inputs:
       force_post:
